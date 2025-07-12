@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.level {
+    margin-bottom: 20px;
+}
+
+.level h2 {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    margin: 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.materia {
+    background-color: #ddd;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    font-size: 14px;
+}
+
+.materia:hover {
+    background-color: #bbb;
+}
+
+.gris {
+    background-color: #bbb;
+}
+
+.verde {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.materia.aprobada {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.materia.incompleta {
+    background-color: #bbb;
+}
