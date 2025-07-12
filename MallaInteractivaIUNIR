@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Interactiva de Medicina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .level {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .subject {
+            width: 180px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            background-color: #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        .subject:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .completed {
+            background-color: #8BC34A;
+        }
+        .pending {
+            background-color: #FF5722;
+            color: white;
+        }
+        .instructions {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .info {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Plan de Estudio Carrera de Medicina</h1>
+        <p class="instructions">Haz clic en las asignaturas para ver si puedes cursarlas. Las asignaturas grises son troncales y las verdes son laterales (puedes adelantar algunas).</p>
+
+        <!-- Primer Nivel -->
+        <div class="level">
+            <div class="subject" id="anat" onclick="checkPrerequisite('anat')">Anatomía</div>
+            <div class="subject" id="bio" onclick="checkPrerequisite('bio')">Biología Celular</div>
+            <div class="subject" id="histo" onclick="checkPrerequisite('histo')">Histología</div>
+        </div>
+
+        <!-- Segundo Nivel -->
+        <div class="level">
+            <div class="subject" id="quim" onclick="checkPrerequisite('quim')">Química Biológica</div>
+            <div class="subject" id="biof" onclick="checkPrerequisite('biof')">Biofísica y Fisiología</div>
+            <div class="subject" id="embri" onclick="checkPrerequisite('embri')">Embriología</div>
+        </div>
+
+        <!-- Tercer Nivel -->
+        <div class="level">
+            <div class="subject" id="anatp" onclick="checkPrerequisite('anatp')">Anatomía Patológica</div>
+            <div class="subject" id="farm" onclick="checkPrerequisite('farm')">Farmacología</div>
+            <div class="subject" id="ecol" onclick="checkPrerequisite('ecol')">Ecología</div>
+        </div>
+
+        <!-- Cuarto Nivel -->
+        <div class="level">
+            <div class="subject" id="medin" onclick="checkPrerequisite('medin')">Medicina Interna I</div>
+            <div class="subject" id="cliqui" onclick="checkPrerequisite('cliqui')">Clínica Quirúrgica I</div>
+        </div>
+
+        <!-- Quinto Nivel -->
+        <div class="level">
+            <div class="subject" id="medin2" onclick="checkPrerequisite('medin2')">Medicina Interna II</div>
+            <div class="subject" id="cliqui2" onclick="checkPrerequisite('cliqui2')">Clínica Quirúrgica II</div>
+            <div class="subject" id="tocog" onclick="checkPrerequisite('tocog')">Tocoginecología</div>
+        </div>
+
+        <!-- Sexto Nivel -->
+        <div class="level">
+            <div class="subject" id="medgen" onclick="checkPrerequisite('medgen')">Medicina General y/o Familiar</div>
+            <div class="subject" id="climed" onclick="checkPrerequisite('climed')">Clínica Médica</div>
+            <div class="subject" id="cliqui3" onclick="checkPrerequisite('cliqui3')">Clínica Quirúrgica</div>
+        </div>
+
+        <!-- Información extra -->
+        <div id="info" class="info">
+            <p id="infoText">Selecciona una materia para ver la información de la correlativa.</p>
+        </div>
+    </div>
+
+    <script>
+        // Definir las dependencias entre las asignaturas
+        const prerequisites = {
+            'anat': [],
+            'bio': [],
+            'histo': ['bio'], // Histología depende de Biología Celular
+            'quim': ['anat'], // Química Biológica depende de Anatomía
+            'biof': ['bio'],  // Biofísica depende de Biología Celular
+            'embri': ['bio'], // Embriología depende de Biología Celular
+            'anatp': ['anat', 'histo'], // Anatomía Patológica depende de Anatomía y Histología
+            'farm': ['anat'], // Farmacología depende de Anatomía
+            'ecol': ['bio'], // Ecología depende de Biología Celular
+            'medin': ['anat', 'biof'], // Medicina Interna I depende de Anatomía y Biofísica
+            'cliqui': ['anat', 'quim'], // Clínica Quirúrgica I depende de Anatomía y Química Biológica
+            'medin2': ['medin'], // Medicina Interna II depende de Medicina Interna I
+            'cliqui2': ['cliqui'], // Clínica Quirúrgica II depende de Clínica Quirúrgica I
+            'tocog': ['medin'], // Tocoginecología depende de Medicina Interna I
+            'medgen': ['medin2'], // Medicina General depende de Medicina Interna II
+            'climed': ['medin2'], // Clínica Médica depende de Medicina Interna II
+            'cliqui3': ['cliqui2'], // Clínica Quirúrgica depende de Clínica Quirúrgica II
+        };
+
+        const subjects = {
+            'anat': {name: 'Anatomía', status: 'completed'},
+            'bio': {name: 'Biología Celular', status: 'completed'},
+            'histo': {name: 'Histología', status: 'completed'},
+            'quim': {name: 'Química Biológica', status: 'pending'},
+            'biof': {name: 'Biofísica y Fisiología', status: 'pending'},
+            'embri': {name: 'Embriología', status: 'pending'},
+            'anatp': {name: 'Anatomía Patológica', status: 'pending'},
+            'farm': {name: 'Farmacología', status: 'pending'},
+            'ecol': {name: 'Ecología', status: 'pending'},
+            'medin': {name: 'Medicina Interna I', status: 'pending'},
+            'cliqui': {name: 'Clínica Quirúrgica I', status: 'pending'},
+            'medin2': {name: 'Medicina Interna II', status: 'pending'},
+            'cliqui2': {name: 'Clínica Quirúrgica II', status: 'pending'},
+            'tocog': {name: 'Tocoginecología', status: 'pending'},
+            'medgen': {name: 'Medicina General y/o Familiar', status: 'pending'},
+            'climed': {name: 'Clínica Médica', status: 'pending'},
+            'cliqui3': {name: 'Clínica Quirúrgica', status: 'pending'}
+        };
+
+        // Mostrar los colores y la posibilidad de cursar dependiendo de las materias aprobadas
+        function checkPrerequisite(subjectId) {
+            let infoText = '';
+
+            const subject = subjects[subjectId];
+            const preReqs = prerequisites[subjectId];
+
+            if (preReqs.every(prerequisite => subjects[prerequisite].status === 'completed')) {
+                infoText = `Puedes cursar ${subject.name}.`;
+                document.getElementById(subjectId).classList.add('completed');
+                document.getElementById(subjectId).classList.remove('pending');
+            } else {
+                infoText = `No puedes cursar ${subject.name} hasta que apruebes las siguientes materias: ${preReqs.map(id => subjects[id].name).join(', ')}.`;
+                document.getElementById(subjectId).classList.add('pending');
+                document.getElementById(subjectId).classList.remove('completed');
+            }
+
+            document.getElementById('info').style.display = 'block';
+            document.getElementById('infoText').innerText = infoText;
+        }
+    </script>
+
+</body>
+</html>
